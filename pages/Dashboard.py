@@ -37,24 +37,30 @@ For your convenience, you can download a summary of this data in CSV format.
 
 ################################################################################################################
 # function to authenticate and open the Google Sheet
-def authenticate_google_sheets(json_keyfile_path, spreadsheet_name):
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile_path, scope)
+
+def authenticate_google_sheets_from_secrets():
+    secrets = st.secrets["gcp_service_account"]
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(secrets, scope)
+    return credentials
+
+def open_sheet(credentials, spreadsheet_name, sheet_name):
     client = gspread.authorize(credentials)
-    sheet = client.open(spreadsheet_name)
+    spreadsheet = client.open(spreadsheet_name)
+    sheet = spreadsheet.worksheet(sheet_name)
     return sheet
 
+def sheet_to_dataframe(sheet):
+    data = sheet.get_all_records()
+    df = pd.DataFrame(data)
+    return df
+
 # function to convert Google Sheet data to a pandas DataFrame
-def sheet_to_dataframe(sheet, worksheet_name):
+def sheet_to_dataframe2(sheet, worksheet_name):
     worksheet = sheet.worksheet(worksheet_name)
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
     return df
-
-# function to update Google Sheet with DataFrame
-def update_google_sheet(worksheet, data):
-    # worksheet.clear()
-    worksheet.update([data.columns.values.tolist()] + data.values.tolist())
 #################################################################################################################
 
 # path to the JSON key file
@@ -65,24 +71,25 @@ spreadsheet_name = 'IDT_Invoice_Record'
 worksheet_name = 'Sheet1'
 
 # authenticate and get the sheet
-sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
-worksheet = sheet.worksheet(worksheet_name)
+#sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
+#worksheet = sheet.worksheet(worksheet_name)
 
-# convert the worksheet to DataFrame
-def get_db_data():
-    return sheet_to_dataframe(sheet, worksheet_name)
+credentials = authenticate_google_sheets_from_secrets()
+sheet1 = open_sheet(credentials, spreadsheet_name, 'Sheet1')
+sheet2 = open_sheet(credentials, spreadsheet_name, 'Sheet2')
+df_sheet1 = sheet_to_dataframe(sheet1)
+df_sheet2 = sheet_to_dataframe(sheet2)
 
-df = get_db_data()
-df_copy = df.copy()
-cleaned_df = helper.clean_df(df_copy)
+
+cleaned_df = helper.clean_df(df_sheet1)
 cleaned_df_sorted = cleaned_df.sort_values(by='Invoice_Date')
 
-worksheet_name = 'Sheet2'
-worksheet = sheet.worksheet(worksheet_name)
-PO_DF = get_db_data()
+#worksheet_name = 'Sheet2'
+#worksheet = sheet.worksheet(worksheet_name)
+#PO_DF = get_db_data()
 
-po_list = PO_DF['PO_Number']
-wbs_list = PO_DF['WBS_Number']
+po_list = df_sheet2['PO_Number']
+wbs_list = df_sheet2['WBS_Number']
 po_option = dict(zip(po_list, wbs_list))
 
 
