@@ -1,0 +1,12 @@
+pandas
+numpy
+pymupdf
+matplotlib
+seaborn
+plotly
+streamlit
+streamlit-lottie
+streamlit-authenticator
+gspread
+oauth2client
+python-dotenv
