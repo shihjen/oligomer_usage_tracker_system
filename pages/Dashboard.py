@@ -99,8 +99,6 @@ cont1 = col1.container(border=False)
 cont1.markdown('#### :blue[Year]')
 year = cont1.selectbox('Select a year:', ['All Years', 2021, 2022, 2023, 2024])
 
-cont1.title('# ')
-
 cont1.markdown('### ')
 cont1.markdown('#### :blue[Usage Summary]')
 
