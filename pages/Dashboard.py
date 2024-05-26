@@ -123,8 +123,8 @@ cont1.markdown(custom_css, unsafe_allow_html=True)
 # Display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
-    <p style="font-size: 20px;">Total Expenses</p>
-    <p style="font-size: 24px; font-weight: bold; margin: 0;">S$ {key_metrics[0]} <br> S$ {key_metrics[1]} (GST)</p>
+    <p style="font-size: 18px;">Total Expenses</p>
+    <p style="font-size: 22px; font-weight: bold; margin: 0;">S$ {key_metrics[0]} <br> S$ {key_metrics[1]} (GST)</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -134,8 +134,8 @@ cont1.markdown(custom_css, unsafe_allow_html=True)
 # Display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
-    <p style="font-size: 20px;">Total Number of Order</p>
-    <p style="font-size: 24px; font-weight: bold; margin: 0;">{key_metrics[2]}</p>
+    <p style="font-size: 18px;">Total Number of Order</p>
+    <p style="font-size: 22px; font-weight: bold; margin: 0;">{key_metrics[2]}</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -145,8 +145,8 @@ cont1.markdown(custom_css, unsafe_allow_html=True)
 # Display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
-    <p style="font-size: 20px;">Average Cost per Order</p>
-    <p style="font-size: 24px; font-weight: bold; margin: 0;">$S {key_metrics[3]}</p>
+    <p style="font-size: 18px;">Average Cost per Order</p>
+    <p style="font-size: 22px; font-weight: bold; margin: 0;">$S {key_metrics[3]}</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -156,8 +156,8 @@ cont1.markdown(custom_css, unsafe_allow_html=True)
 # Display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
-    <p style="font-size: 20px;">Average Lead Time</p>
-    <p style="font-size: 24px; font-weight: bold; margin: 0;">{key_metrics[4]} days</p>
+    <p style="font-size: 18px;">Average Lead Time</p>
+    <p style="font-size: 22px; font-weight: bold; margin: 0;">{key_metrics[4]} days</p>
 </div>
 """, unsafe_allow_html=True)
     
@@ -167,8 +167,8 @@ cont1.markdown(custom_css, unsafe_allow_html=True)
 # Display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
-    <p style="font-size: 20px;">Total Nucleotide Ordered</p>
-    <p style="font-size: 24px; font-weight: bold; margin: 0;">{key_metrics[5]} bases</p>
+    <p style="font-size: 18px;">Total Nucleotide Ordered</p>
+    <p style="font-size: 22px; font-weight: bold; margin: 0;">{key_metrics[5]} bases</p>
 </div>
 """, unsafe_allow_html=True)
 
