@@ -12,10 +12,6 @@ from dotenv import load_dotenv
 from navigation import make_sidebar
 
 
-
-load_dotenv()
-credentials = os.getenv('credentials')
-
 # Streamlit page configuration
 st.set_page_config(
     page_title='BCEAD Oligomer Usage Tracker System',
@@ -41,8 +37,26 @@ def authenticate_google_sheets(json_keyfile_path, spreadsheet_name):
     sheet = client.open(spreadsheet_name)
     return sheet
 
+def authenticate_google_sheets_from_secrets():
+    json_str = st.secrets["gcp_service_account"]
+    client_credentials = json.loads(json_str)
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(client_credentials, scope)
+    return credentials
+
+def open_sheet(credentials, spreadsheet_name, sheet_name):
+    client = gspread.authorize(credentials)
+    spreadsheet = client.open(spreadsheet_name)
+    sheet = spreadsheet.worksheet(sheet_name)
+    return sheet
+
+def sheet_to_dataframe(sheet):
+    data = sheet.get_all_records()
+    df = pd.DataFrame(data)
+    return df
+
 # function to convert Google Sheet data to a pandas DataFrame
-def sheet_to_dataframe(sheet, worksheet_name):
+def sheet_to_dataframe2(sheet, worksheet_name):
     worksheet = sheet.worksheet(worksheet_name)
     data = worksheet.get_all_records()
     df = pd.DataFrame(data)
@@ -106,26 +120,30 @@ spreadsheet_name = 'IDT_Invoice_Record'
 # name of the worksheet to convert to DataFrame
 worksheet_name = 'Sheet1'
 
+credentials = authenticate_google_sheets_from_secrets()
+sheet1 = open_sheet(credentials, spreadsheet_name, 'sheet1')
+df_sheet1 = sheet_to_dataframe(sheet1)
+
 # authenticate and get the sheet
-sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
-worksheet = sheet.worksheet(worksheet_name)
+#sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
+#worksheet = sheet.worksheet(worksheet_name)
 
 # convert the worksheet to DataFrame
-def get_db_data():
-    return sheet_to_dataframe(sheet, worksheet_name)
+#def get_db_data():
+#    return sheet_to_dataframe(sheet, worksheet_name)
 
-df = get_db_data()
+#df = get_db_data()
 
 if data.shape[0] >= 1:
     button = st.sidebar.button('Push extracted data to the database')
     if button:
         with st.spinner('Upload data to the database...'):
-            merged_df = pd.concat([df, data], axis=0)
+            merged_df = pd.concat([df_sheet1, data], axis=0)
             # update Google Sheet with combined DataFrame
             update_google_sheet(worksheet, merged_df)
             st.success('Data successfully updated in the database!')
 else:
     pass
 
-st.session_state.df = get_db_data()
+#st.session_state.df = get_db_data()
 
