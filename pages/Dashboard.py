@@ -94,7 +94,7 @@ po_option = dict(zip(po_list, wbs_list))
 
 
 
-col1, col2, col3 = st.columns([1, 3, 3], gap='large')
+col1, col2, col3 = st.columns([1.5, 3, 2.5], gap='large')
 cont1 = col1.container(border=False)
 cont1.markdown('#### :blue[Year]')
 year = cont1.selectbox('Select a year:', ['All Years', 2021, 2022, 2023, 2024])
