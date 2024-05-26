@@ -30,18 +30,17 @@ def load_lottiefile(filepath: str):
         return json.load(f)
     
 # function to authenticate and open the Google Sheet
-def authenticate_google_sheets(json_keyfile_path, spreadsheet_name):
-    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile_path, scope)
-    client = gspread.authorize(credentials)
-    sheet = client.open(spreadsheet_name)
-    return sheet
+#def authenticate_google_sheets(json_keyfile_path, spreadsheet_name):
+#    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+#    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile_path, scope)
+#    client = gspread.authorize(credentials)
+#    sheet = client.open(spreadsheet_name)
+#    return sheet
 
 def authenticate_google_sheets_from_secrets():
-    json_str = st.secrets["gcp_service_account"]
-    client_credentials = json.loads(json_str)
+    secrets = st.secrets["gcp_service_account"]
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(client_credentials, scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(secrets, scope)
     return credentials
 
 def open_sheet(credentials, spreadsheet_name, sheet_name):
@@ -121,7 +120,7 @@ spreadsheet_name = 'IDT_Invoice_Record'
 worksheet_name = 'Sheet1'
 
 credentials = authenticate_google_sheets_from_secrets()
-sheet1 = open_sheet(credentials, spreadsheet_name, 'sheet1')
+sheet1 = open_sheet(credentials, spreadsheet_name, 'Sheet1')
 df_sheet1 = sheet_to_dataframe(sheet1)
 
 # authenticate and get the sheet
@@ -140,7 +139,7 @@ if data.shape[0] >= 1:
         with st.spinner('Upload data to the database...'):
             merged_df = pd.concat([df_sheet1, data], axis=0)
             # update Google Sheet with combined DataFrame
-            update_google_sheet(worksheet, merged_df)
+            update_google_sheet(sheet1, merged_df)
             st.success('Data successfully updated in the database!')
 else:
     pass
