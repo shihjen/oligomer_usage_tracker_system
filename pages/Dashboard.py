@@ -1,3 +1,4 @@
+# load the required dependencies
 import streamlit as st
 import pandas as pd
 import helper
@@ -58,7 +59,7 @@ def sheet_to_dataframe2(sheet, worksheet_name):
 #################################################################################################################
 
 
-
+# connect to Google account and get the spreadhseets
 credentials = authenticate_google_sheets_from_secrets()
 spreadsheet_name = 'IDT_Invoice_Record'
 sheet1 = open_sheet(credentials, spreadsheet_name, 'Sheet1')
@@ -66,25 +67,28 @@ sheet2 = open_sheet(credentials, spreadsheet_name, 'Sheet2')
 df_sheet1 = sheet_to_dataframe(sheet1)
 df_sheet2 = sheet_to_dataframe(sheet2)
 
-
+# data cleaning
 cleaned_df = helper.clean_df(df_sheet1)
 cleaned_df_sorted = cleaned_df.sort_values(by='Invoice_Date')
 
+# PO list with WBS number
 po_list = df_sheet2['PO_Number']
 wbs_list = df_sheet2['WBS_Number']
 po_option = dict(zip(po_list, wbs_list))
 
 
-
+# divide the body into 3 columns
 col1, col2, col3 = st.columns([1.25, 3, 2.75], gap='large')
-cont1 = col1.container(border=False)
-cont1.markdown('#### :blue[Select Year]')
-year = cont1.selectbox('Select a year:', ['All Years', 2021, 2022, 2023, 2024])
 
+#################################################################################################################
+# container 1 --- select year and display key metrics
+cont1 = col1.container(border=False)
+cont1.markdown('#### :blue[Year]')
+year = cont1.selectbox('Select year:', ['All Years', 2021, 2022, 2023, 2024])
 cont1.markdown('### ')
 cont1.markdown('#### :blue[Usage Summary]')
 
-
+# obtain the key metrics
 key_metrics = helper.display_key_metrics(year, cleaned_df_sorted)
 
 
@@ -175,29 +179,30 @@ else:
 ###########################################################################################################
 
 
+###########################################################################################################
+# container 3 --- analysis by PO
 cont3 = col3.container(border=False)
 cont3.markdown('#### :blue[Analysis for Purchase Order (PO)]')
 user_option = cont3.selectbox('Select a purchase order (PO)', list(po_option.keys()))
 selected_df = cleaned_df_sorted[cleaned_df_sorted['PO_Number'] == str(user_option)]
 selected_df_subset = selected_df[['Invoice_Date','Invoice_Number','DO_Number','Sale_Order','Invoice_Total']]
 
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont3.markdown(f"""
 <div class="custom-metric-card">Funding Source:
     <p style="font-size: 20px; font-weight: bold; margin: 0;"> {po_option[user_option]}</p>
 </div>
 """, unsafe_allow_html=True)
 
-#cont3.markdown('#### ')
-
+# display the selected data based on PO
 cont3.dataframe(selected_df_subset, use_container_width=True)
 
-
+# donut chart
 total_spending  = cleaned_df_sorted['Invoice_Total'].sum()
 po_spending = cleaned_df_sorted[cleaned_df_sorted['PO_Number'] == str(user_option)]['Invoice_Total'].sum()
 cont3.markdown(f'#### :blue[Purchase Order (PO) Value: S$ {po_spending}]')
 donut = helper.plot_donut(po_spending, total_spending)
 cont3.plotly_chart(donut)
-
+############################################################################################################
 
 
