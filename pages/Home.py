@@ -8,7 +8,6 @@ import helper
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-from dotenv import load_dotenv
 from navigation import make_sidebar
 
 
@@ -28,27 +27,22 @@ make_sidebar()
 def load_lottiefile(filepath: str):
     with open(filepath, 'r') as f:
         return json.load(f)
-    
-# function to authenticate and open the Google Sheet
-#def authenticate_google_sheets(json_keyfile_path, spreadsheet_name):
-#    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-#    credentials = ServiceAccountCredentials.from_json_keyfile_name(json_keyfile_path, scope)
-#    client = gspread.authorize(credentials)
-#    sheet = client.open(spreadsheet_name)
-#    return sheet
 
+# function to authenticate for connecting to the Google spreadsheet    
 def authenticate_google_sheets_from_secrets():
     secrets = st.secrets["gcp_service_account"]
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(secrets, scope)
     return credentials
 
+# function to open the Google spreadsheet
 def open_sheet(credentials, spreadsheet_name, sheet_name):
     client = gspread.authorize(credentials)
     spreadsheet = client.open(spreadsheet_name)
     sheet = spreadsheet.worksheet(sheet_name)
     return sheet
 
+# function to convert the Google spreadsheet into pandas dataframe
 def sheet_to_dataframe(sheet):
     data = sheet.get_all_records()
     df = pd.DataFrame(data)
