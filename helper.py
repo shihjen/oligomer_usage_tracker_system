@@ -72,7 +72,7 @@ def extract_pdf_data(document):
     standardized_data = {field: data.get(field, "") for field in keywords.values()}
     return standardized_data
 
-
+########################################################################################################
 # function to process all PDF files in a directory
 def process_pdf_directory(documents):
     import pymupdf
@@ -90,8 +90,10 @@ def process_pdf_directory(documents):
         all_extracted_data.append(extracted_data)
     
     return all_extracted_data
+########################################################################################################
 
 
+########################################################################################################
 # function to clean the imported dataframe from DB
 def clean_df(df):
     import pandas as pd
@@ -112,8 +114,10 @@ def clean_df(df):
     df_deduped['Invoice_Month'] = df_deduped['Invoice_Date'].dt.month
     df_deduped['Invoice_Month'] = df_deduped['Invoice_Month'].map(month_mapping)
     return df_deduped
+#########################################################################################################
 
 
+#########################################################################################################
 # function to extract key metrics
 def display_key_metrics(year, data):
     import pandas as pd
@@ -130,26 +134,27 @@ def display_key_metrics(year, data):
     average_lead_time = round((sum(fil_data['Delivery_Leadtime'] / fil_data.shape[0])),2)
     
     return [total_expenses_notax, total_expenses, total_number_order, average_order, average_lead_time, total_base]
+#############################################################################################################
 
 
+#############################################################################################################
 # function to plot the heatmap
 def plot_heatmap(data):
     import pandas as pd
     import plotly.graph_objects as go
-    # Aggregate the data to get total invoice amount per month per year
+    # aggregate the data to get total invoice amount per month per year
     monthly_totals = data.groupby(['Invoice_Year', 'Invoice_Month'])['Invoice_Total'].sum().reset_index()
 
-    # Pivot the data to create a matrix suitable for heatmap
+    # pivot the data to create a matrix suitable for heatmap
     pivot_table = monthly_totals.pivot(index='Invoice_Year', columns='Invoice_Month', values='Invoice_Total').fillna(0)
 
-    # Create the heatmap using Plotly Graph Objects
+    # create the heatmap using Plotly Graph Objects
     fig = go.Figure(data=go.Heatmap(
         z=pivot_table.values,
         x=pivot_table.columns,
         y=pivot_table.index,
         colorscale='blues',
         showscale=False,
-        #colorbar=dict(title='Invoice Total'),
         hovertemplate='Year: %{y}<br>Month: %{x}<br>Total: S$%{z}<extra></extra>',
     ))
 
@@ -158,9 +163,9 @@ def plot_heatmap(data):
         xaxis_title='Month',
         yaxis_title='Year',
         xaxis=dict(
-            tickmode='array',
-            tickvals=list(range(1, 13)),
-            ticktext=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            type='category',
+            categoryorder='array',
+            categoryarray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         ),
         yaxis=dict(
             tickmode='array',
@@ -170,7 +175,10 @@ def plot_heatmap(data):
         height=500
     )
     return fig
+###############################################################################################################
 
+
+###############################################################################################################
 # function to plot bar chart (orders by year)
 def plot_bar(data):
     import pandas as pd
@@ -200,7 +208,10 @@ def plot_bar(data):
         height=500
     )
     return fig
+#################################################################################################################
 
+
+#################################################################################################################
 # function to plot bar chart by month
 def plot_bar_month(data, year):
     import pandas as pd
@@ -223,7 +234,7 @@ def plot_bar_month(data, year):
 
     fig.update_layout(
         #title='Number of Order from 2021 to 2024',
-        #xaxis_title='Year',
+        #xaxis_title='Month',
         yaxis_title='Number of Order',
         xaxis=dict(
             tickmode='array',
@@ -233,13 +244,16 @@ def plot_bar_month(data, year):
         height=500
     )
     return fig
+#################################################################################################################
 
+
+
+##################################################################################################################
 # function to plot donut chart
 def plot_donut(po_spending, total_spending):
     import plotly.graph_objects as go
     fig = go.Figure(data=[go.Pie(labels=['Selected PO', 'Other POs'],
                                 values=[po_spending, total_spending - po_spending],
                                 hole=.5)])
-
-    #fig.update_layout(title_text='Spending Breakdown by Purchase Order')
     return fig
+###################################################################################################################

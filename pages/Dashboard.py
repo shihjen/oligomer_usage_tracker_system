@@ -89,9 +89,10 @@ cont1.markdown('### ')
 cont1.markdown('#### :blue[Usage Summary]')
 
 # obtain the key metrics
+# key metrics list - [total_expenses_notax, total_expenses, total_number_order, average_order, average_lead_time, total_base]
 key_metrics = helper.display_key_metrics(year, cleaned_df_sorted)
 
-
+# define a custom css script
 custom_css = """
 <style>
 /* Define a custom class with the desired background color */
@@ -103,10 +104,10 @@ custom_css = """
 </style>
 """
 
+# key metric card 1 --- total expenses (with and without GST)
 # display the custom CSS
 cont1.markdown(custom_css, unsafe_allow_html=True)
-
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
     <p style="font-size: 18px;">Total Expenses</p>
@@ -114,10 +115,10 @@ cont1.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# key metric card 2 --- total number of orders
 # display the custom CSS
 cont1.markdown(custom_css, unsafe_allow_html=True)
-
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
     <p style="font-size: 18px;">Total Number of Order</p>
@@ -125,10 +126,10 @@ cont1.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# key metric card 3 --- average cost per order
 # display the custom CSS
 cont1.markdown(custom_css, unsafe_allow_html=True)
-
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
     <p style="font-size: 18px;">Average Cost per Order</p>
@@ -136,10 +137,10 @@ cont1.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# key metric card 4 --- average lead time
 # display the custom CSS
 cont1.markdown(custom_css, unsafe_allow_html=True)
-# lead_time = 5 
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
     <p style="font-size: 18px;">Average Lead Time</p>
@@ -147,17 +148,16 @@ cont1.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
     
+# key metric card 5 - total nucleotide ordered
 # display the custom CSS
 cont1.markdown(custom_css, unsafe_allow_html=True)
-
-# Display the metric card with the custom class using HTML
+# display the metric card with the custom class using HTML
 cont1.markdown(f"""
 <div class="custom-metric-card">
     <p style="font-size: 18px;">Total Nucleotide Ordered</p>
     <p style="font-size: 22px; font-weight: bold; margin: 0;">{key_metrics[5]} bases</p>
 </div>
 """, unsafe_allow_html=True)
-
 
 
 
@@ -177,6 +177,7 @@ else:
     bar = helper.plot_bar_month(cleaned_df_sorted, year)
     cont2.plotly_chart(bar, theme='streamlit', use_container_width=True)
 ###########################################################################################################
+
 
 
 ###########################################################################################################

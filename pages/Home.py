@@ -62,8 +62,7 @@ def update_google_sheet(worksheet, data):
     worksheet.update([data.columns.values.tolist()] + data.values.tolist())
 #################################################################################################################
 
-
-    
+# load the lottie animation    
 lottie_cover = load_lottiefile('image/animation.json')
 
 st.title(':blue[BCEAD Oligomers Usage Tracker]')

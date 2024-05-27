@@ -1,3 +1,4 @@
+# load the required dependencies
 import streamlit as st
 from time import sleep
 from streamlit.runtime.scriptrunner import get_script_run_ctx
@@ -17,12 +18,12 @@ def get_current_page_name():
 def make_sidebar():
     with st.sidebar:
 
-        if st.session_state.get("logged_in", False):
+        if st.session_state.get('logged_in', False):
             st.page_link('pages/Home.py', label='Data Extraction', icon='📄')
             st.page_link('pages/Dashboard.py', label='Dashboard', icon='📊')
 
-            st.write("")
-            st.write("")
+            st.write('')
+            st.write('')
 
             #if st.button('Log out'):
             #    logout()
