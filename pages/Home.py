@@ -86,6 +86,7 @@ st.sidebar.title('Upload File')
 uploaded_files = st.sidebar.file_uploader('Upload the invoice', type='pdf', accept_multiple_files=True)
 
 
+
 ################################################################################################################
 # container - table display data extracted from the uploaded invoice(s)
 container = st.container(border=True)
@@ -111,27 +112,11 @@ else:
     container.write('Upload invoice to extract information')
 
 
-
-# path to the JSON key file
-json_keyfile_path = '.streamlit/secrets.toml'
-# name of the Google Sheet
-spreadsheet_name = 'IDT_Invoice_Record'
-# name of the worksheet to convert to DataFrame
-worksheet_name = 'Sheet1'
-
 credentials = authenticate_google_sheets_from_secrets()
+spreadsheet_name = 'IDT_Invoice_Record'
 sheet1 = open_sheet(credentials, spreadsheet_name, 'Sheet1')
 df_sheet1 = sheet_to_dataframe(sheet1)
 
-# authenticate and get the sheet
-#sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
-#worksheet = sheet.worksheet(worksheet_name)
-
-# convert the worksheet to DataFrame
-#def get_db_data():
-#    return sheet_to_dataframe(sheet, worksheet_name)
-
-#df = get_db_data()
 
 if data.shape[0] >= 1:
     button = st.sidebar.button('Push extracted data to the database')
@@ -144,5 +129,5 @@ if data.shape[0] >= 1:
 else:
     pass
 
-#st.session_state.df = get_db_data()
+
 
