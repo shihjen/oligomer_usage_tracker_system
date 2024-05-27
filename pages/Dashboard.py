@@ -4,14 +4,8 @@ import helper
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-from dotenv import load_dotenv
 from navigation import make_sidebar
 
-
-
-
-load_dotenv()
-credentials = os.getenv('credentials')
 
 # Streamlit page configuration
 st.set_page_config(
@@ -23,9 +17,8 @@ st.set_page_config(
 
 make_sidebar()
 
-st.sidebar.image('image/BCEAD.png')
-
 st.subheader(':blue[BCEAD Oligomers Usage Tracker System]', divider='gray')
+st.sidebar.image('image/BCEAD.png')
 st.sidebar.subheader(':blue[Welcome to the BCEAD Oligomers Usage Tracker System]', divider='gray')
 st.sidebar.write('''
 This dashboard provides a comprehensive overview of the BCEAD lab's research funding usage on oligomers. 
@@ -37,19 +30,20 @@ For your convenience, you can download a summary of this data in CSV format.
 
 ################################################################################################################
 # function to authenticate and open the Google Sheet
-
 def authenticate_google_sheets_from_secrets():
     secrets = st.secrets["gcp_service_account"]
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_dict(secrets, scope)
     return credentials
 
+# function to open the Google spreadsheet
 def open_sheet(credentials, spreadsheet_name, sheet_name):
     client = gspread.authorize(credentials)
     spreadsheet = client.open(spreadsheet_name)
     sheet = spreadsheet.worksheet(sheet_name)
     return sheet
 
+# function to convert the Google spreadsheet into pandas dataframe
 def sheet_to_dataframe(sheet):
     data = sheet.get_all_records()
     df = pd.DataFrame(data)
@@ -63,18 +57,10 @@ def sheet_to_dataframe2(sheet, worksheet_name):
     return df
 #################################################################################################################
 
-# path to the JSON key file
-json_keyfile_path = '.streamlit/secrets.toml'
-# name of the Google Sheet
-spreadsheet_name = 'IDT_Invoice_Record'
-# name of the worksheet to convert to DataFrame
-worksheet_name = 'Sheet1'
 
-# authenticate and get the sheet
-#sheet = authenticate_google_sheets(json_keyfile_path, spreadsheet_name)
-#worksheet = sheet.worksheet(worksheet_name)
 
 credentials = authenticate_google_sheets_from_secrets()
+spreadsheet_name = 'IDT_Invoice_Record'
 sheet1 = open_sheet(credentials, spreadsheet_name, 'Sheet1')
 sheet2 = open_sheet(credentials, spreadsheet_name, 'Sheet2')
 df_sheet1 = sheet_to_dataframe(sheet1)
@@ -84,10 +70,6 @@ df_sheet2 = sheet_to_dataframe(sheet2)
 cleaned_df = helper.clean_df(df_sheet1)
 cleaned_df_sorted = cleaned_df.sort_values(by='Invoice_Date')
 
-#worksheet_name = 'Sheet2'
-#worksheet = sheet.worksheet(worksheet_name)
-#PO_DF = get_db_data()
-
 po_list = df_sheet2['PO_Number']
 wbs_list = df_sheet2['WBS_Number']
 po_option = dict(zip(po_list, wbs_list))
@@ -96,7 +78,7 @@ po_option = dict(zip(po_list, wbs_list))
 
 col1, col2, col3 = st.columns([1.25, 3, 2.75], gap='large')
 cont1 = col1.container(border=False)
-cont1.markdown('#### :blue[Year]')
+cont1.markdown('#### :blue[Select Year]')
 year = cont1.selectbox('Select a year:', ['All Years', 2021, 2022, 2023, 2024])
 
 cont1.markdown('### ')

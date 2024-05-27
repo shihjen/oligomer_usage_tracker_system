@@ -77,7 +77,7 @@ You can choose to export this data in CSV format or push the extracted data dire
 For an overview of oligomer usage, please visit the dashboard page.
 ''')
 st.sidebar.title('Upload File')
-uploaded_files = st.sidebar.file_uploader('Upload the invoice', type='pdf', accept_multiple_files=True)
+uploaded_files = st.sidebar.file_uploader('Upload the IDT Invoice(s)', type='pdf', accept_multiple_files=True)
 
 
 
