@@ -158,19 +158,6 @@ def plot_heatmap(data):
         hovertemplate='Year: %{y}<br>Month: %{x}<br>Total: S$%{z}<extra></extra>',
     ))
 
-    # add border lines by drawing rectangles around each cell
-    shapes = []
-    for i, row in enumerate(pivot_table.index):
-        for j, col in enumerate(pivot_table.columns):
-            shapes.append(
-                go.layout.Shape(
-                    type="rect",
-                    x0=col - 0.5, x1=col + 0.5,
-                    y0=row - 0.5, y1=row + 0.5,
-                    line=dict(color='grey', width=1)
-                )
-            )
-
     fig.update_layout(
         #title='Expenses by Month',
         xaxis_title='Month',
