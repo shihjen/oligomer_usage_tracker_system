@@ -160,8 +160,8 @@ def plot_heatmap(data):
 
     # add border lines by drawing rectangles around each cell
     shapes = []
-    for i, row in enumerate(pivot.index):
-        for j, col in enumerate(pivot.columns):
+    for i, row in enumerate(pivot_table.index):
+        for j, col in enumerate(pivot_table.columns):
             shapes.append(
                 go.layout.Shape(
                     type="rect",
