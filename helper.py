@@ -255,5 +255,7 @@ def plot_donut(po_spending, total_spending):
     fig = go.Figure(data=[go.Pie(labels=['Selected PO', 'Other POs'],
                                 values=[po_spending, total_spending - po_spending],
                                 hole=.5)])
+    fig.update_layout(height=500, margin = dict(t=30, l=25, r=25, b=25))
+    fig.update_layout(showlegend=False)
     return fig
 ###################################################################################################################
